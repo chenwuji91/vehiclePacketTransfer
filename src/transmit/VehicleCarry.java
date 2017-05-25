@@ -17,6 +17,10 @@ public class VehicleCarry implements Serializable {
         packetCount = new HashMap<>();
     }
 
+    public HashMap<Integer, Integer> getPacketCount() {
+        return packetCount;
+    }
+
     /**
      * 删除这个车上面的所有数据包
      */

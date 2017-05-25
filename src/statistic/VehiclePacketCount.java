@@ -2,6 +2,7 @@ package statistic;
 
 /**
  * Created by Administrator on 2017/5/4 0004.
+ * 直接基于notTracedHop的HashMap对象进行统计 主要是统计并且输出当前时刻的全部包的信息
  */
 
 import tools.FileIO;

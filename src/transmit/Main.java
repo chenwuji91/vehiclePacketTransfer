@@ -7,15 +7,15 @@ import java.util.*;
 import java.util.Random;
 
 public class Main {
-    private static int beginTime = 64800;//传输开始的时间
-    private static int endTime = 68400; //传输结束的时间
+    private static int beginTime = 36000;//传输开始的时间
+    private static int endTime = 37000; //传输结束的时间
     private static String processDate = "2016_03_28";  //处理的是哪一天的数据
     private static int packetTTL = 20; //包存活的时间
     private static boolean traceHop = false; //如果true记录每个包中间所有的跳数，否则只看最后的结果 当前状态是在车内统计包的情况
     private static int initPacket = 5000; //网络传输在起始时刻随机给车辆分了多少个包
     private static HashSet<String> vehicleID;  //在这段时间内所有会出现的车辆的ID集合
     //private static int saveObjEverySecond = -1; //在一定的时间后保存对象并清楚记录的数据
-    private static boolean useExtraPacketRecorder = true;
+    private static boolean useExtraPacketRecorder = false;
     private static int saveStatusInterval = -1;  //如果为-1 则表示只在清空数据的时候保存状态 保存当前状态并清空内部的包记录器的时间间隔  相当于随时可以查看当前车辆拥有数据包的情况
     private static int cleanMemoryInterval = 20;  //如果是-1，只在最后保存一次。在一定的时间间隔内，清除数据包，将数据包保存到文件，设置过小可能导致短暂消失的车辆数据包丢失
     private static boolean lowMemoryModel = true; //强行清除内存
@@ -26,7 +26,7 @@ public class Main {
     Main(){
         if(useExtraPacketRecorder)
             traceHop = false;//如果启用了外部的包记录器 将禁用内部的包记录器
-        if(traceHop==false && useExtraPacketRecorder == false){//如果只是统计车辆携带数据包的个数
+        if(traceHop==false && useExtraPacketRecorder == false){//如果只是统计车辆携带数据包的个数 那么禁止清除包记录器
             cleanMemoryInterval = -1;
             lowMemoryModel = false;
         }
@@ -87,9 +87,9 @@ public class Main {
                 System.gc();//强制进行垃圾回收
             }
 
-
-
         }
+        String outputFile = processDate + "_init_" + initPacket + "_from_" + beginTime + "_to_" + endTime + ".obj";
+        rso.saveObjAndCleanInternalRecorder(allData,outputFile);
     }
 
     /**
