@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * Created by chenwuji<chenwuji@mail.ustc.edu.cn> on 2017/5/25 0025.
  * 本类可以提供统计包内每一秒数据信息的类  可以统计出每一秒 每个车上面新获得的包的情况
+ * 本程序直接基于运行时候内部包的记录器，记录实时的包的数量，可以看到每一秒每辆车上面的数据包
  */
 public class VehiclePacketCount2 {
 
