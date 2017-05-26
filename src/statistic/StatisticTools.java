@@ -141,4 +141,11 @@ public class StatisticTools {
         result = new Float(Math.sqrt(Math.abs(getVariance(inputData))));
         return result;
     }
+
+
+    public static float distanceOfPalces(int[] place1, int[] place2){
+        float distance = (float)(Math.sqrt(Math.pow((Double.valueOf(place1[0]) - Double.valueOf(place2[0])),2.0)
+                + Math.pow((Double.valueOf(place1[1]) - Double.valueOf(place2[1])),2.0)) * 5);
+        return distance;
+    }
 }

@@ -47,23 +47,33 @@ public class ExternalPacketAnalysis {
         String folderPath = "./PacketDistanceAnalysis/";
         FileIO.createDir(folderPath);
         String outputPath = folderPath + processDate + "_" + initPacket + "_from_" + beginTime + "_to_" + endTime;
-        StringBuffer outputString = new StringBuffer();
         for(Map.Entry<Packet,HashMap<Integer, HashMap<String,int[]>>> p: allResult.entrySet()){
             Packet packet = p.getKey();
             String packetID = packet.hashCode() + "_" + packet.getBornPlace()[0]+ "_" + packet.getBornPlace()[1];
-            outputString.append(packetID);
+            StringBuffer outputStringAvg = new StringBuffer();
+            StringBuffer outputStringMax = new StringBuffer();
+            outputStringAvg.append(packetID);
+            outputStringMax.append(packetID);
             HashMap<Integer, HashMap<String,int[]>> packetStatus = p.getValue();
             for(int i = beginTime;i<endTime;i++){
                 if(packetStatus.containsKey(i)){
                     HashMap<String,int[]> vehicleDistanceMap = packetStatus.get(i);//依次看每一秒这个包都在哪些车上面
+                    float maxDistance = -1;
+                    float totalDistance = 0;
                     for(Map.Entry<String, int[]> eachVehicle:vehicleDistanceMap.entrySet()){
-
+                        float distance = StatisticTools.distanceOfPalces(eachVehicle.getValue(),packet.getBornPlace());
+                        if(distance > maxDistance)
+                            maxDistance = distance;
+                        totalDistance += distance;
                     }
-
+                    outputStringAvg.append("," + totalDistance/vehicleDistanceMap.size());
+                    outputStringMax.append("," + maxDistance);
                 }
             }
-
-
+            outputStringAvg.append("\n");
+            outputStringMax.append("\n");
+            FileIO.writeWithAppend(outputPath + "_avg.csv",outputStringAvg.toString());
+            FileIO.writeWithAppend(outputPath + "_max.csv",outputStringMax.toString());
         }
     }
 
