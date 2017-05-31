@@ -35,6 +35,8 @@ public class AllPacketRecorder {
     public void refreshStatus(int currentTime, HashMap<String, int[]> positionInfo, HashMap<String, VehicleCarry> allData){
         for(Map.Entry<String, VehicleCarry> eachV: allData.entrySet()){
             String vehicleID = eachV.getKey();
+            if(!positionInfo.containsKey(vehicleID))//如果这个车在这一秒里面没有出现 那自然也不用考虑它
+                continue;
             int[] vehiclePosition = positionInfo.get(vehicleID);
             VehicleCarry vc = eachV.getValue();
             LinkedHashSet<Packet> packetlist = vc.getPacketList();

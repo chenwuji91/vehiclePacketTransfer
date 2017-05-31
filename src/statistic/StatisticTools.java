@@ -144,6 +144,8 @@ public class StatisticTools {
 
 
     public static float distanceOfPalces(int[] place1, int[] place2){
+        if(place1 == null | place2 == null)
+            System.out.print("ss");
         float distance = (float)(Math.sqrt(Math.pow((Double.valueOf(place1[0]) - Double.valueOf(place2[0])),2.0)
                 + Math.pow((Double.valueOf(place1[1]) - Double.valueOf(place2[1])),2.0)) * 5);
         return distance;
