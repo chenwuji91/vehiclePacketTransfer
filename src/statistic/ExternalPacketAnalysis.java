@@ -41,6 +41,7 @@ public class ExternalPacketAnalysis {
     public static void main(String args[]) throws Exception {
         ExternalPacketAnalysis analy = new ExternalPacketAnalysis();
         HashMap<Packet,HashMap<Integer, HashMap<String,int[]>>> allResult = analy.combineSeparatedObj();
+        analy.packetTransmitDistance(allResult);
     }
 
     private void packetTransmitDistance(HashMap<Packet,HashMap<Integer, HashMap<String,int[]>>> allResult){
@@ -68,6 +69,10 @@ public class ExternalPacketAnalysis {
                     }
                     outputStringAvg.append("," + totalDistance/vehicleDistanceMap.size());
                     outputStringMax.append("," + maxDistance);
+                }
+                else{
+                    outputStringAvg.append("," + -1);
+                    outputStringMax.append("," + -1);
                 }
             }
             outputStringAvg.append("\n");

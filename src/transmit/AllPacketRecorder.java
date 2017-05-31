@@ -25,6 +25,25 @@ public class AllPacketRecorder {
         System.out.println("Finish init external recorder~");
     }
 
+
+    /**
+     * 本函数用于在每一秒结束的时候 刷新车的状态 以更新数据包的状态
+     * @param currentTime 当前时间
+     * @param positionInfo 当前时间所有车辆的位置信息
+     * @param allData 当前所有的车辆携带的数据包的信息
+     */
+    public void refreshStatus(int currentTime, HashMap<String, int[]> positionInfo, HashMap<String, VehicleCarry> allData){
+        for(Map.Entry<String, VehicleCarry> eachV: allData.entrySet()){
+            String vehicleID = eachV.getKey();
+            int[] vehiclePosition = positionInfo.get(vehicleID);
+            VehicleCarry vc = eachV.getValue();
+            LinkedHashSet<Packet> packetlist = vc.getPacketList();
+            for(Packet p:packetlist) {
+                addPacketToVehicle(p,vehicleID,currentTime,vehiclePosition);
+            }
+        }
+    }
+
     public int packetSize(){
         return packetStatus.size();
     }
@@ -36,6 +55,7 @@ public class AllPacketRecorder {
         }
         return size;
     }
+
 
     @Deprecated
     public void initPacketStatus(HashMap<String, VehicleCarry> allData){
