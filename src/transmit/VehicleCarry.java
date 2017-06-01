@@ -31,9 +31,14 @@ public class VehicleCarry implements Serializable {
         packetCount = null;
     }
 
+    /**
+     * 清除
+     * @param ttl
+     * @param currentTime
+     */
     public void cleanDeadPacket(int ttl, int currentTime){
         Iterator<Packet> it = packetList.iterator();
-        packetList.removeIf(p->(currentTime - p.getBornTime()) > ttl);
+        packetList.removeIf(p->(currentTime - p.getAttainTime()) > ttl);
     }
 
     public LinkedHashSet<Packet> getPacketList(){

@@ -15,7 +15,9 @@ public class Main {
     private static final int initPacket = 5000; //网络传输在起始时刻随机给车辆分了多少个包
     private static HashSet<String> vehicleID;  //在这段时间内所有会出现的车辆的ID集合
     //private static int saveObjEverySecond = -1; //在一定的时间后保存对象并清楚记录的数据
-    private static final boolean useExtraPacketRecorder = false;
+    private static final boolean useExtraPacketRecorder = true;
+    private static final int vehiclePacketLimit = 1000;// 每个车上限制1000个包
+    private static final int packetTransferSpeed = 100; //每秒能够传输的包的数量
     private static final int saveStatusInterval = -1;  //如果为-1 则表示只在清空数据的时候保存状态 保存当前状态并清空内部的包记录器的时间间隔  相当于随时可以查看当前车辆拥有数据包的情况
     private static int cleanMemoryInterval = 10;  //如果是-1，只在最后保存一次。在一定的时间间隔内，清除数据包，将数据包保存到文件，设置过小可能导致短暂消失的车辆数据包丢失
     private static boolean lowMemoryModel = true; //强行清除内存
@@ -45,6 +47,7 @@ public class Main {
      */
     private void packetExchange(HashMap<String, VehicleCarry> allData) throws Exception {
         AllPacketRecorder externalRecorder = null;
+        Transfer tranfer = new Transfer(traceHop, useExtraPacketRecorder, refreshExternalRecorderInterval,vehiclePacketLimit, packetTransferSpeed);
         if(useExtraPacketRecorder)//如果需要启动外部的包状态记录器，需要初始化包记录器
             externalRecorder = new AllPacketRecorder(allData,cleanMemoryInterval);
         for (int i = beginTime;i <= endTime; i++){//从开始时刻到结束时刻开始进行传输
@@ -60,7 +63,7 @@ public class Main {
                 int[] positionVechcleTo = positionInfo.get(vehicleIDTo);
                 VehicleCarry vehicleFromData = allData.get(vehicleIDFrom);
                 VehicleCarry vehicleToData = allData.get(vehicleIDTo);
-                transferPacket(vehicleFromData,vehicleToData,i,vehicleIDTo, positionVechcleTo,externalRecorder);
+                tranfer.transferPacket(vehicleFromData,vehicleToData,i,vehicleIDTo, positionVechcleTo,externalRecorder);
                 //                generatePacket(vehicleToData, vehicleIDFrom, vehicleIDTo, i, positionVechcleTo); //在传输的过程中产生数据包
             }
 
@@ -92,6 +95,7 @@ public class Main {
                 externalRecorder.refreshStatus(i,positionInfo,allData);//刷新当前这一秒的状态
             }
         }
+
         /*在处理完所有的之后，进行一次最终结果的保存*/
         String outputFile = processDate + "_init_" + initPacket + "_from_" + beginTime + "_to_" + endTime + ".obj";
         rso.saveObjAndCleanInternalRecorder(allData,outputFile);
@@ -110,40 +114,40 @@ public class Main {
         vehicleToData.add(new Packet(vehicleIDFrom, vehicleIDTo,i, positionVechcleTo, traceHop),i);
     }
 
-    /**
-     * 传输数据包 从一个车到另外一个车， 如果有重复就不传输
-     * @param vehicleFromData
-     * @param vehicleToData
-     * @param currentTime
-     * @param toVehicleID
-     * @param positionVehicleTo
-     * @throws CloneNotSupportedException
-     */
-    private void transferPacket(VehicleCarry vehicleFromData, VehicleCarry vehicleToData,
-                                       int currentTime, String toVehicleID, int[] positionVehicleTo,
-                                        AllPacketRecorder externalRecorder) throws CloneNotSupportedException {
-        int transferredPacketAllowed = vehicleFromData.getTotalPacketSize() - vehicleFromData.getPacketNum(currentTime);//总的数据包个数减去这一秒收到的个数
-        Iterator<Packet> it = vehicleFromData.iterator();
-        int alreadyTransferred = 0;
-        while(it.hasNext()){
-            if(alreadyTransferred >= transferredPacketAllowed)//如果已经传输的包大于允许传输的包
-                break;
-            Packet currentPacket = it.next();
-            if(!vehicleToData.contains(currentPacket)){//这个时候是过滤掉一跳的包的
-                Packet transferredPacket = currentPacket;
-                if(traceHop){
-                    transferredPacket = (Packet) currentPacket.clone();
-                    transferredPacket.addInfo(currentTime, positionVehicleTo, toVehicleID);
-                }
-                if(useExtraPacketRecorder && refreshExternalRecorderInterval != 1){//注意 如果每秒都刷新位置的话 就不用在交换的时候再进行记录
-                    externalRecorder.addPacketToVehicle(transferredPacket,toVehicleID,currentTime,positionVehicleTo);
-                }
-                vehicleToData.add(transferredPacket,currentTime);
-                alreadyTransferred++;
-            }
-        }
-
-    }
+//    /**
+//     * 传输数据包 从一个车到另外一个车， 如果有重复就不传输
+//     * @param vehicleFromData
+//     * @param vehicleToData
+//     * @param currentTime
+//     * @param toVehicleID
+//     * @param positionVehicleTo
+//     * @throws CloneNotSupportedException
+//     */
+//    private void transferPacket(VehicleCarry vehicleFromData, VehicleCarry vehicleToData,
+//                                       int currentTime, String toVehicleID, int[] positionVehicleTo,
+//                                        AllPacketRecorder externalRecorder) throws CloneNotSupportedException {
+//        int transferredPacketAllowed = vehicleFromData.getTotalPacketSize() - vehicleFromData.getPacketNum(currentTime);//总的数据包个数减去这一秒收到的个数
+//        Iterator<Packet> it = vehicleFromData.iterator();
+//        int alreadyTransferred = 0;
+//        while(it.hasNext()){
+//            if(alreadyTransferred >= transferredPacketAllowed)//如果已经传输的包大于允许传输的包
+//                break;
+//            Packet currentPacket = it.next();
+//            if(!vehicleToData.contains(currentPacket)){//这个时候是过滤掉一跳的包的
+//                Packet transferredPacket = currentPacket;
+//                if(traceHop){
+//                    transferredPacket = (Packet) currentPacket.clone();
+//                    transferredPacket.addInfo(currentTime, positionVehicleTo, toVehicleID);
+//                }
+//                if(useExtraPacketRecorder && refreshExternalRecorderInterval != 1){//注意 如果每秒都刷新位置的话 就不用在交换的时候再进行记录
+//                    externalRecorder.addPacketToVehicle(transferredPacket,toVehicleID,currentTime,positionVehicleTo);
+//                }
+//                vehicleToData.add(transferredPacket,currentTime);
+//                alreadyTransferred++;
+//            }
+//        }
+//
+//    }
 
 
     public static void main(String[] args) throws Exception {
