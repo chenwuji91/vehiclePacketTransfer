@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Main {
     private static final int beginTime = 40000;//传输开始的时间
-    private static final int endTime = 42000; //传输结束的时间
+    private static final int endTime = 40500; //传输结束的时间
     private static final String processDate = "2016_03_28";  //处理的是哪一天的数据
     private static final int packetTTL = 20; //包存活的时间
     private static boolean traceHop = false; //如果true记录每个包中间所有的跳数，否则只看最后的结果 当前状态是在车内统计包的情况
@@ -67,8 +67,8 @@ public class Main {
             /*******************处理状态保存*************************/
             /*在处理过程中保存中间结果 通俗的说就是保存allData*/
             String outputFile = processDate + "_init_" + initPacket + "_from_" + beginTime + "_to_" + i + ".obj";
-            if(saveStatusInterval > 0 && i % saveStatusInterval == 0)
-                rso.saveObjAndCleanInternalRecorder(allData,outputFile);//先保存当前的状态
+            if(saveStatusInterval > 0 && i % saveStatusInterval == 0 && (useExtraPacketRecorder|traceHop))
+                rso.saveObjAndCleanInternalRecorder(allData,outputFile);//先保存当前的状态 使用内部包记录器的时候就不记录状态了
             /*保存内部包记录器 保存外部包记录器 保存内部记录器 清除内部包*/
             if(cleanMemoryInterval > 0 && i % cleanMemoryInterval == 0 && useExtraPacketRecorder == true)
             {
