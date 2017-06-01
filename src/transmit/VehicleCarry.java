@@ -11,7 +11,6 @@ import java.util.*;
 public class VehicleCarry implements Serializable {
     LinkedHashSet<Packet> packetList;
     HashMap<Integer,Integer> packetCount;
-
     VehicleCarry(){
         packetList = new LinkedHashSet<Packet>();
         packetCount = new HashMap<>();
@@ -29,6 +28,7 @@ public class VehicleCarry implements Serializable {
         packetCount.clear();
         packetList = null;
         packetCount = null;
+
     }
 
     /**

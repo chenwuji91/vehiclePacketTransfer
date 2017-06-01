@@ -103,24 +103,25 @@ public class Packet implements Cloneable, Serializable {
         hopVehicleList.add(toVehicleID);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        Packet s = (Packet) o;
-        if(s.fromVehicle.equals(this.fromVehicle) && s.toVehicle.equals(this.toVehicle)
-                && s.bornTime == this.bornTime && s.bornPlace[0] == this.bornPlace[0] && s.bornPlace[1] == this.bornPlace[1]){
-            return true;
-        }
-        else
-            return false;
-//        return s.id.equals(this.id);
-    }
+    //禁用掉override 不能开启内部记录器
+//    @Override
+//    public boolean equals(Object o) {
+//        Packet s = (Packet) o;
+//        if(s.fromVehicle.equals(this.fromVehicle) && s.toVehicle.equals(this.toVehicle)
+//                && s.bornTime == this.bornTime && s.bornPlace[0] == this.bornPlace[0] && s.bornPlace[1] == this.bornPlace[1]){
+//            return true;
+//        }
+//        else
+//            return false;
+////        return s.id.equals(this.id);
+//    }
 
-    @Override
-    public int hashCode() {
-        int result = Integer.valueOf(this.fromVehicle) + Integer.valueOf(this.toVehicle) * 12345 +
-                this.bornPlace[0] * 567 + this.bornPlace[1] * 789 + this.bornTime * 97531;
-        return result;
-    }
+//    @Override
+//    public int hashCode() {
+//        int result = Integer.valueOf(this.fromVehicle) + Integer.valueOf(this.toVehicle) * 12345 +
+//                this.bornPlace[0] * 567 + this.bornPlace[1] * 789 + this.bornTime * 97531;
+//        return result;
+//    }
 
     @Override
     protected Object clone() throws CloneNotSupportedException {

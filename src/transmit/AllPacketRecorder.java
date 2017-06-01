@@ -44,7 +44,7 @@ public class AllPacketRecorder {
                 addPacketToVehicle(p,vehicleID,currentTime,vehiclePosition);
             }
         }
-    }
+     }
 
     public int packetSize(){
         return packetStatus.size();

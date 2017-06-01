@@ -28,11 +28,16 @@ public class Main {
     Init init;
 
     Main(){
+
         if(useExtraPacketRecorder)
             traceHop = false;//如果启用了外部的包记录器 将禁用内部的包记录器
         if(traceHop==false && useExtraPacketRecorder == false){//如果只是统计车辆携带数据包的个数 那么禁止清除包记录器
             cleanMemoryInterval = -1;
             lowMemoryModel = false;
+        }
+        if(traceHop){
+            System.out.println("仅使用内部记录器是不允许的，先改进Packet类的Hash函数，再启用本功能。程序现在退出!");
+            System.exit(-1);
         }
         if(!useExtraPacketRecorder)
             refreshExternalRecorderInterval = -1;//如果外部记录器都不启用的话，那么也别每秒刷新了
