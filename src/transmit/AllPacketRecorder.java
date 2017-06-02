@@ -97,6 +97,22 @@ public class AllPacketRecorder {
     }
 
     /**
+     * 删除包 把指定时间的 指定车辆上面的数据包删除 需要连带执行这个程序
+     * @param packet 需要传输的数据包
+     * @param time 数据包交换的时间
+     * @param vehicleID 当前接收数据包的车辆ID
+     */
+    public void removePacketFromVehicle(Packet packet, String vehicleID, int time){
+        if(!packetStatus.containsKey(packet))
+            return;
+        if(!packetStatus.get(packet).containsKey(time))
+            return;
+        HashMap<String, int[]> packetStatuasOfThisVehicle = packetStatus.get(packet).get(time);
+        packetStatuasOfThisVehicle.remove(vehicleID);
+    }
+
+
+    /**
      * 返回当前所有车的记录集合
      * @return
      */

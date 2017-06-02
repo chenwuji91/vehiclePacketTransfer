@@ -45,6 +45,8 @@ public class Main {
         rso = new RuntimeStatusOperation(vehicleID,packetTTL,traceHop, useExtraPacketRecorder,cleanMemoryInterval,processDate); //初始化运行状态维护，包括状态的保存等
         init = new Init(beginTime,endTime,processDate,traceHop,initPacket); //初始化模块，包含车辆列表的初始化和车上数据的初始化
     }
+
+
     /**
      *
      * 传输数据主函数，现在根据  直接对于字典进行修改， 每个字典分别记录每个车的相关的信息
@@ -99,6 +101,9 @@ public class Main {
                 System.out.println("正在刷新外部包记录状态");
                 externalRecorder.refreshStatus(i,positionInfo,allData);//刷新当前这一秒的状态
             }
+            /*清除过期的数据包*/
+            System.out.println("清理过期的数据包...");
+            rso.cleanDeprecatedPacket(allData, i);
         }
 
         /*在处理完所有的之后，进行一次最终结果的保存*/

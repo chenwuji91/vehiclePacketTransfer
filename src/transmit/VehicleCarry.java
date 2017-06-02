@@ -9,8 +9,8 @@ import java.util.*;
  * Created by Administrator on 2017/5/3 0003.
  */
 public class VehicleCarry implements Serializable {
-    LinkedHashSet<Packet> packetList;
-    HashMap<Integer,Integer> packetCount;
+    private LinkedHashSet<Packet> packetList;
+    private HashMap<Integer,Integer> packetCount;
     VehicleCarry(){
         packetList = new LinkedHashSet<Packet>();
         packetCount = new HashMap<>();
@@ -31,15 +31,40 @@ public class VehicleCarry implements Serializable {
 
     }
 
-    /**
-     * 清除
+//    /**
+//     * 清除
+//     * @param ttl
+//     * @param currentTime
+//     */
+//    @Deprecated
+//    public void cleanDeadPacket(int ttl, int currentTime){
+//        Iterator<Packet> it = packetList.iterator();
+//        packetList.removeIf(p->(currentTime - p.getAttainTime()) > ttl);
+//    }
+
+    /***
+     * 清除这个车上面超过ttl的数据包 这个程序必须每秒都执行一次 都则会出现计数异常
+     * 20170601修改
      * @param ttl
      * @param currentTime
      */
-    public void cleanDeadPacket(int ttl, int currentTime){
-        Iterator<Packet> it = packetList.iterator();
-        packetList.removeIf(p->(currentTime - p.getAttainTime()) > ttl);
+    public void cleanDeprecatedPackets(int ttl, int currentTime){
+        int cleanTimeOfpackets = currentTime - ttl;
+        if(packetCount.containsKey(cleanTimeOfpackets)){
+            int removePacketCount = packetCount.get(cleanTimeOfpackets);
+            Packet[] deadPacket = new Packet[removePacketCount];
+            Iterator<Packet> it = packetList.iterator();
+            while(it.hasNext())
+            {
+                deadPacket[--removePacketCount] = it.next();
+            }
+            for(int i = 0;i < deadPacket.length;i++){
+                packetList.remove(deadPacket[i]);
+            }
+            packetCount.remove(cleanTimeOfpackets);
+        }
     }
+
 
     public LinkedHashSet<Packet> getPacketList(){
         return this.packetList;

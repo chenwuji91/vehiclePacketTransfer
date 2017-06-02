@@ -79,11 +79,18 @@ public class RuntimeStatusOperation {
         tools.RuntimeTest.printReaminMemory();//看剩余内存
     }
 
-    @Deprecated
-    public void cleanOldPacket(HashMap<String, VehicleCarry> allData, int currentTime){
+
+    /***
+     * 清除每个车上面过期的数据包
+     * @param allData
+     * @param currentTime
+     */
+    public void cleanDeprecatedPacket(HashMap<String, VehicleCarry> allData, int currentTime){
+        if(packetTTL < 1)
+            return;
         Iterator<String> it = vehicleID.iterator();
         while(it.hasNext()){
-            allData.get(it.next()).cleanDeadPacket(packetTTL,currentTime);
+            allData.get(it.next()).cleanDeprecatedPackets(packetTTL,currentTime);
         }
     }
 
