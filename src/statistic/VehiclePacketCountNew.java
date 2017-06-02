@@ -5,6 +5,7 @@ import transmit.VehicleCarry;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -36,7 +37,7 @@ public class VehiclePacketCountNew {
             StringBuffer outputData = new StringBuffer("");
             String vehicleID = e.getKey();
             outputData.append(vehicleID);
-            HashMap<Integer, Integer> realTimePacketCount = e.getValue().getPacketCount();
+            LinkedHashMap<Integer, Integer> realTimePacketCount = e.getValue().getPacketCount();
             int intotal = 0;
             for(int i = beginTime;i<endTime+1;i++){
                 if(showAcclu){

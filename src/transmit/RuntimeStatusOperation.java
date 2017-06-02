@@ -86,11 +86,10 @@ public class RuntimeStatusOperation {
      * @param currentTime
      */
     public void cleanDeprecatedPacket(HashMap<String, VehicleCarry> allData, int currentTime){
-        if(packetTTL < 1)
-            return;
-        Iterator<String> it = vehicleID.iterator();
+        Iterator<Map.Entry<String,VehicleCarry>> it = allData.entrySet().iterator();
         while(it.hasNext()){
-            allData.get(it.next()).cleanDeprecatedPackets(packetTTL,currentTime);
+            Map.Entry<String,VehicleCarry> nowVehicle = it.next();
+            nowVehicle.getValue().cleanDeprecatedPackets(packetTTL,currentTime);
         }
     }
 

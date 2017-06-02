@@ -70,7 +70,9 @@ public class Main {
                 int[] positionVechcleTo = positionInfo.get(vehicleIDTo);
                 VehicleCarry vehicleFromData = allData.get(vehicleIDFrom);
                 VehicleCarry vehicleToData = allData.get(vehicleIDTo);
-                tranfer.transferPacket(vehicleFromData,vehicleToData,i,vehicleIDTo, positionVechcleTo,externalRecorder);
+                tranfer.transferPacketWithLimitationRemoveOldIfFull(vehicleFromData,vehicleToData,i,vehicleIDTo, positionVechcleTo,externalRecorder);
+
+//                tranfer.transferPacket(vehicleFromData,vehicleToData,i,vehicleIDTo, positionVechcleTo,externalRecorder);
                 //                generatePacket(vehicleToData, vehicleIDFrom, vehicleIDTo, i, positionVechcleTo); //在传输的过程中产生数据包
             }
 

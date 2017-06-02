@@ -10,15 +10,18 @@ import java.util.*;
  */
 public class VehicleCarry implements Serializable {
     private LinkedHashSet<Packet> packetList;
-    private HashMap<Integer,Integer> packetCount;
+    private LinkedHashMap<Integer,Integer> packetCount;
+
     VehicleCarry(){
         packetList = new LinkedHashSet<Packet>();
-        packetCount = new HashMap<>();
+        packetCount = new LinkedHashMap<>();
     }
 
-    public HashMap<Integer, Integer> getPacketCount() {
+    public LinkedHashMap<Integer, Integer> getPacketCount() {
         return packetCount;
     }
+
+
 
     /**
      * 删除这个车上面的所有数据包
@@ -54,7 +57,7 @@ public class VehicleCarry implements Serializable {
             int removePacketCount = packetCount.get(cleanTimeOfpackets);
             Packet[] deadPacket = new Packet[removePacketCount];
             Iterator<Packet> it = packetList.iterator();
-            while(it.hasNext())
+            while(removePacketCount > 0)
             {
                 deadPacket[--removePacketCount] = it.next();
             }
