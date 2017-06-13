@@ -17,9 +17,13 @@ public class VehiclePacketCountNew {
 
     private static String folderName = "./notTraceHopObj/";
     private static boolean showAcclu = true;
+    private static String outPutFolderName = "./vehiclePacketCount/";
+
+
 
     public static void main(String args[]) throws Exception {
         String fileName[] = FileIO.getFileName(folderName);
+        FileIO.createDir(outPutFolderName);
         for(int i = 0;i<fileName.length;i++) {
             System.out.println("Processing:" + fileName[i]);
             int beginTime = Integer.valueOf(fileName[i].split("_from_")[1].split("_to_")[0]);
@@ -57,7 +61,7 @@ public class VehiclePacketCountNew {
 
             }
             outputData.append("\n");
-            FileIO.writeWithAppend(outputFileName, outputData.toString());
+            FileIO.writeWithAppend(outPutFolderName + outputFileName, outputData.toString());
         }
     }
 }

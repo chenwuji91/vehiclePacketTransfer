@@ -13,6 +13,7 @@ import java.util.Map;
  * 需要看几个东西，看在一定的时间内包能够传输多远 还有看传输一定的距离需要多长时间
  * 分开统计每一个的
  */
+
 public class ExternalPacketAnalysisSep {
 
     /**
@@ -22,6 +23,7 @@ public class ExternalPacketAnalysisSep {
      */
     private static final String folderName = "./packetRecorder/";
     private static String outputFileName = "";
+    private static final int saveInterval = 1;
     int beginTime;
     int endTime = -1;
     String processDate;
@@ -59,13 +61,14 @@ public class ExternalPacketAnalysisSep {
         FileIO.createDir(folderPath);
         for (Map.Entry<Packet, HashMap<Integer, HashMap<String, int[]>>> p : oneResult.entrySet()) {
             Packet packet = p.getKey();
-            String packetID = packet.hashCode() + "_" + packet.getBornPlace()[0] + "_" + packet.getBornPlace()[1];
+            String packetID = packet.getBornTime() + "_" + packet.getBornPlace()[0] + "_" + packet.getBornPlace()[1] + "_"
+                            +packet.getFromVehicle()+ "_" + packet.getToVehicle() ;
             StringBuffer outputStringAvg = new StringBuffer();
             StringBuffer outputStringMax = new StringBuffer();
             outputStringAvg.append(packetID);
             outputStringMax.append(packetID);
             HashMap<Integer, HashMap<String, int[]>> packetStatus = p.getValue();
-            for (int i = beginTime; i < endTime; i++) {
+            for (int i = endTime - saveInterval; i < endTime; i++) {
                 if (packetStatus.containsKey(i)) {
                     HashMap<String, int[]> vehicleDistanceMap = packetStatus.get(i);//依次看每一秒这个包都在哪些车上面
                     float maxDistance = -1;

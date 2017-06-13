@@ -7,19 +7,19 @@ import java.util.*;
 import java.util.Random;
 
 public class Main {
-    private static final int beginTime = 40000;//传输开始的时间
-    private static final int endTime = 40500; //传输结束的时间
+    private static int beginTime = 27000;//传输开始的时间
+    private static int endTime = 28800; //传输结束的时间
     private static final String processDate = "2016_03_28";  //处理的是哪一天的数据
     private static final int packetTTL = 20; //包存活的时间
     private static boolean traceHop = false; //如果true记录每个包中间所有的跳数，否则只看最后的结果 当前状态是在车内统计包的情况
-    private static final int initPacket = 5000; //网络传输在起始时刻随机给车辆分了多少个包
+    private static int initPacket = 10000; //网络传输在起始时刻随机给车辆分了多少个包
     private static HashSet<String> vehicleID;  //在这段时间内所有会出现的车辆的ID集合
     //private static int saveObjEverySecond = -1; //在一定的时间后保存对象并清楚记录的数据
-    private static final boolean useExtraPacketRecorder = true;
-    private static final int vehiclePacketLimit = 1000;// 每个车上限制1000个包
-    private static final int packetTransferSpeed = 100; //每秒能够传输的包的数量
-    private static final int saveStatusInterval = -1;  //如果为-1 则表示只在清空数据的时候保存状态 保存当前状态并清空内部的包记录器的时间间隔  相当于随时可以查看当前车辆拥有数据包的情况
-    private static int cleanMemoryInterval = 10;  //如果是-1，只在最后保存一次。在一定的时间间隔内，清除数据包，将数据包保存到文件，设置过小可能导致短暂消失的车辆数据包丢失
+    private static final boolean useExtraPacketRecorder = false;
+    private static int vehiclePacketLimit = 7000;// 每个车上限制1000个包
+    private static int packetTransferSpeed = 500; //每秒能够传输的包的数量
+    private static int saveStatusInterval = 100;  //如果为-1 则表示只在清空数据的时候保存状态 保存当前状态并清空内部的包记录器的时间间隔  相当于随时可以查看当前车辆拥有数据包的情况
+    private static int cleanMemoryInterval = 1;  //如果是-1，只在最后保存一次。在一定的时间间隔内，清除数据包，将数据包保存到文件，设置过小可能导致短暂消失的车辆数据包丢失
     private static boolean lowMemoryModel = true; //强行清除内存
     private static int refreshExternalRecorderInterval = 1; //是不是每秒刷新全部的状态 如果设置成-1的话 只在碰面的时候刷新这个值
 
@@ -70,10 +70,10 @@ public class Main {
                 int[] positionVechcleTo = positionInfo.get(vehicleIDTo);
                 VehicleCarry vehicleFromData = allData.get(vehicleIDFrom);
                 VehicleCarry vehicleToData = allData.get(vehicleIDTo);
-                tranfer.transferPacketWithLimitationRemoveOldIfFull(vehicleFromData,vehicleToData,i,vehicleIDTo, positionVechcleTo,externalRecorder);
+//                tranfer.transferPacketWithLimitationRemoveOldIfFull(vehicleFromData,vehicleToData,i,vehicleIDTo, positionVechcleTo,externalRecorder);
 
-//                tranfer.transferPacket(vehicleFromData,vehicleToData,i,vehicleIDTo, positionVechcleTo,externalRecorder);
-                //                generatePacket(vehicleToData, vehicleIDFrom, vehicleIDTo, i, positionVechcleTo); //在传输的过程中产生数据包
+                tranfer.transferPacket(vehicleFromData,vehicleToData,i,vehicleIDTo, positionVechcleTo,externalRecorder);
+//                                generatePacket(vehicleToData, vehicleIDFrom, vehicleIDTo, i, positionVechcleTo); //在传输的过程中产生数据包
             }
 
             /*******************处理状态保存*************************/
@@ -164,6 +164,13 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         //testUnit();
+        if(args.length > 2){
+            beginTime = Integer.valueOf(args[0]);
+            endTime = Integer.valueOf(args[1]);
+            initPacket = Integer.valueOf(args[2]);
+            packetTransferSpeed = Integer.valueOf(args[3]);
+            vehiclePacketLimit = Integer.valueOf(args[4]);
+        }
         Main m = new Main();
         HashMap<String, VehicleCarry> allData = m.init.initDict(vehicleID);//获得当前时段所有车辆的字典
         m.init.initPacket(allData);//初始化数据包 随机分配若干数量的数据包

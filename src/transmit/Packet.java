@@ -40,6 +40,30 @@ public class Packet implements Cloneable, Serializable {
         }
     }
 
+    public void setBornTime(int bornTime) {
+        this.bornTime = bornTime;
+    }
+
+    public void setBornPlace(int[] bornPlace) {
+        this.bornPlace = bornPlace;
+    }
+
+    public String getFromVehicle() {
+        return fromVehicle;
+    }
+
+    public void setFromVehicle(String fromVehicle) {
+        this.fromVehicle = fromVehicle;
+    }
+
+    public String getToVehicle() {
+        return toVehicle;
+    }
+
+    public void setToVehicle(String toVehicle) {
+        this.toVehicle = toVehicle;
+    }
+
     public int getAttainTime() {
         return attainTime;
     }

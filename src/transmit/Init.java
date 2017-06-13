@@ -53,7 +53,7 @@ public class Init {
         for(int i = 0;i < initPacket; i++){
             String sendToVehicle = vehicleArrayID.get(rd.nextInt(vehicleArrayID.size()));
             VehicleCarry receiceVehicleCarry = allData.get(sendToVehicle);
-            receiceVehicleCarry.add(new Packet("1", sendToVehicle,beginTime, positionInfo.get(sendToVehicle), traceHop),beginTime);
+            receiceVehicleCarry.add(new Packet(String.valueOf(i), sendToVehicle,beginTime, positionInfo.get(sendToVehicle), traceHop),beginTime);
         }
     }
 }

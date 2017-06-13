@@ -13,6 +13,8 @@ public class FileIO {
      * @return            文件中一行一行的数据
      */
     private static final String BASEPATH = "E:/transmit/connection_file/";
+//    private static final String BASEPATH = "/home/hadoop/bigdisk/paper201703/connection_file/";
+
     FileIO(){
         createDir("./packetRecorder");
         createDir("./notTraceHopObj/");
